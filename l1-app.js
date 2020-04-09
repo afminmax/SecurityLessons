@@ -1,3 +1,4 @@
+// level 1 security: username and password only, clear text ><
 const express = require('express');
 const bodyParser = require('body-parser');
 const ejs = require('ejs');

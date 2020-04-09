@@ -1,3 +1,4 @@
+// level 2 security: encrypting a password in the database
 const express = require('express');
 const bodyParser = require('body-parser');
 const ejs = require('ejs');

@@ -1,4 +1,4 @@
-// level 4 security: using MD5 hashing now
+// level 3 security: hiding the secret key
 require('dotenv').config();
 // note on the use of this level 3, the user DB needs to refreshed so that the encryption key
 // uses the new secret!
@@ -6,8 +6,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const ejs = require('ejs');
 const mongoose = require('mongoose');
-// const encrypt = require('mongoose-encryption');
-const md5 = require('md5');
+const encrypt = require('mongoose-encryption');
 
 const app = express();
 
@@ -26,10 +25,10 @@ const userSchema = new mongoose.Schema({
 });
 
 // encrypt the password in the db and put in an env, this is really enabling level 3
-// userSchema.plugin(encrypt, {
-//   secret: process.env.SECRET,
-//   encryptedFields: ['password'],
-// });
+userSchema.plugin(encrypt, {
+  secret: process.env.SECRET,
+  encryptedFields: ['password'],
+});
 
 const User = mongoose.model('User', userSchema);
 // ------------------------- MONGODB DECLARATIONS ------------------------------------ //
@@ -49,7 +48,7 @@ app.get('/register', function (req, res) {
 app.post('/register', function (req, res) {
   newUser = new User({
     email: req.body.username,
-    password: md5(req.body.password),
+    password: req.body.password,
   });
   newUser.save(function (err) {
     if (err) {
