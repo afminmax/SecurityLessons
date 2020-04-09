@@ -49,7 +49,7 @@ app.get('/register', function (req, res) {
 app.post('/register', function (req, res) {
   newUser = new User({
     email: req.body.username,
-    password: md5(req.body.password),
+    password: md5(req.body.password), // md5 function was added here
   });
   newUser.save(function (err) {
     if (err) {
@@ -62,7 +62,7 @@ app.post('/register', function (req, res) {
 
 app.post('/login', function (req, res) {
   const username = req.body.username;
-  const password = req.body.password;
+  const password = md5(req.body.password); // md5 function was added here
   User.findOne({ email: username }, function (err, foundUser) {
     if (err) {
       // if no user found, dump error
