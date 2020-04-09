@@ -1,3 +1,6 @@
+require('dotenv').config();
+// note on the use of this level 3, the user DB needs to refreshed so that the encryption key
+// uses the new secret!
 const express = require('express');
 const bodyParser = require('body-parser');
 const ejs = require('ejs');
@@ -20,9 +23,11 @@ const userSchema = new mongoose.Schema({
   password: String,
 });
 
-// encrypt the password in the db, this is really enabling level 2
-const secret = 'allthechildrenwentouttoplay .'; //haha, its a local db! :P
-userSchema.plugin(encrypt, { secret: secret, encryptedFields: ['password'] });
+// encrypt the password in the db and put in an env, this is really enabling level 3
+userSchema.plugin(encrypt, {
+  secret: process.env.SECRET,
+  encryptedFields: ['password'],
+});
 
 const User = mongoose.model('User', userSchema);
 // ------------------------- MONGODB DECLARATIONS ------------------------------------ //
