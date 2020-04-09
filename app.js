@@ -9,6 +9,7 @@ const mongoose = require('mongoose');
 // const encrypt = require('mongoose-encryption');
 // const md5 = require('md5');
 const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 const app = express();
 
@@ -48,22 +49,25 @@ app.get('/register', function (req, res) {
 });
 
 app.post('/register', function (req, res) {
-  newUser = new User({
-    email: req.body.username,
-    password: md5(req.body.password), // md5 function was added here
-  });
-  newUser.save(function (err) {
-    if (err) {
-      console.log(err);
-    } else {
-      res.render('secrets');
-    }
+  bcrypt.hash(req.body.password, saltRounds, function (err, hash) {
+    const newUser = new User({
+      email: req.body.username,
+      password: hash, // generated hash goes here
+    });
+    newUser.save(function (err) {
+      if (err) {
+        console.log(err);
+      } else {
+        res.render('secrets');
+      }
+    });
   });
 });
 
 app.post('/login', function (req, res) {
   const username = req.body.username;
-  const password = md5(req.body.password); // md5 function was added here
+  const password = req.body.password;
+
   User.findOne({ email: username }, function (err, foundUser) {
     if (err) {
       // if no user found, dump error
@@ -71,10 +75,13 @@ app.post('/login', function (req, res) {
     } else {
       if (foundUser) {
         // if there was a found user, then...
-        if (foundUser.password === password) {
-          // check the users password
-          res.render('secrets');
-        }
+        bcrypt.compare(password, foundUser.password, function (err, result) {
+          if (result === true) {
+            res.render('secrets');
+          } else {
+            err;
+          }
+        });
       }
     }
   });
