@@ -1,4 +1,4 @@
-// level 7 security: Oauth
+// level 6 security: passportjs
 require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
