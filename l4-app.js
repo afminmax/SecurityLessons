@@ -1,4 +1,4 @@
-// level 5 security: using bcrypt with a random salt and salt rounds
+// level 4 security: using MD5 hashing now
 require('dotenv').config();
 // note on the use of this level 3, the user DB needs to refreshed so that the encryption key
 // uses the new secret!
@@ -7,8 +7,7 @@ const bodyParser = require('body-parser');
 const ejs = require('ejs');
 const mongoose = require('mongoose');
 // const encrypt = require('mongoose-encryption');
-// const md5 = require('md5');
-const bcrypt = require('bcrypt');
+const md5 = require('md5');
 
 const app = express();
 
